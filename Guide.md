@@ -23,7 +23,7 @@ You’re looking at $0.53/hr to play games this way. Not too bad. That’s aroun
 1. <a name="step1"></a>On AWS, create a new EC2 instance. Use defaults everywhere except as mentioned below:
 
  * Base image should be `Microsoft Windows Server 2012 R2 Base` (since Windows still has all the best games) 
-![Windows Server 2012 R2](Assets/ec2win2012.png)
+![Windows Server 2012 R2](Images/ec2win2012.png)
  * Use a `g2.2xlarge` instance (to get an NVIDIA GRID K520 graphics card). Though a larger instance does exist in some regions, I have been unsuccessful in taking advantage of the multiple vGPUs w/ SLI. Plus it’s four times the cost.
  * Use a Spot instance, it’s significantly cheaper (fractions the regular cost) than regular instances. Note cost will vary depending on region. I usually bid a penny more.
  * For the storage step, leave everything at the defaults. This will provision a 35GB EBS drive where your OS will live, and a 65GB SSD-backed instance-store (which is super fast and where the games will go). This instance-store will be available as a `Z:\` drive.
@@ -38,7 +38,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
  * [Disable the windows firewall](http://www.dell.com/support/article/us/en/19/SLN156432/EN)
  * [Enable showing filename extensions](https://support.software.dell.com/appassure/kb/118327)
 
-4. Download and install version 347.88 of the [GeForce GTX TITAN X driver package](http://www.geforce.com/drivers/results/83080) for Windows 8.1. Only the GeForce package contains the latest drivers for the GRID cards. If you get an error when installing the drivers that says it couldn’t detect a GeForce card, you’re not in Remote Desktop as an `admin session`. Reboot when asked. Note that the latest version of the drivers sometimes cause Windows not to be able to restart. ![Geforce Titan for Windows 8.1 64-bit](Assets/geforcetitan.png)
+4. Download and install version 347.88 of the [GeForce GTX TITAN X driver package](http://www.geforce.com/drivers/results/83080) for Windows 8.1. Only the GeForce package contains the latest drivers for the GRID cards. If you get an error when installing the drivers that says it couldn’t detect a GeForce card, you’re not in Remote Desktop as an `admin session`. Reboot when asked. Note that the latest version of the drivers sometimes cause Windows not to be able to restart. ![Geforce Titan for Windows 8.1 64-bit](Images/geforcetitan.png)
 
 5. The GRID cards have an optimization Steam can use which can offload the H.264 video encoding to the GPU. We need to enable this though. Sign up for a developer account with NVidia and download and extract the [GRID SDK](https://developer.nvidia.com/grid-app-game-streaming). In the bin directory run the following (using a Command Prompt): `NvFBCEnable.exe -enable -noreset`. Reboot again.
 
@@ -49,7 +49,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
  echo Y | cacls C:\Windows\System32\Drivers\BasicDisplay.sys /G Administrator:F
  del C:\Windows\System32\Drivers\BasicDisplay.sys
  ```
- ![Only the NVIDIA GRID K520](Assets/onlyonedevice.png)
+ ![Only the NVIDIA GRID K520](Images/onlyonedevice.png)
  
 7. Start the Windows Audio Service as per the instructions [here](http://www.win2012workstation.com/enable-sound/). As we’re also on an EC2 machine, there is no soundcard, so install [Razer Surround](http://www.razerzone.com/surround) to get a virtual soundcard, AND you get fancy 5.1 simulation! Note that there’s no need to create/login to a Razer ID account.
 
@@ -68,16 +68,16 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
   ```
 
  Then:
-  1. Download my [server config](http://lg.io/assets/server.ovpn) and place it in the `C:\Program Files\OpenVPN\config` directory.
+  1. Download my [server config](Assets/server.ovpn) and place it in the `C:\Program Files\OpenVPN\config` directory.
   2. Use the Microsoft Remote Desktop file sharing feature to download the following files from the `C:\Program Files\OpenVPN\easy-rsa\keys` directory: `ca.crt`, `client.crt`, and `client.key` onto your client computer.
-  3. Combine those files along with my [client config](http://lg.io/assets/client.ovpn), [up.sh](http://lg.io/assets/up.sh) and [down.sh](http://lg.io/assets/down.sh). The up and down are used to forward multicast from your client to the server. *Note you’ll need WireShark installed on the mac (with pcap support) in order to make multicast more reliable with the up/down scripts.*
+  3. Combine those files along with my [client config](Assets/client.ovpn), [up.sh](Assets/up.sh) and [down.sh](Assets/down.sh). The up and down are used to forward multicast from your client to the server. *Note you’ll need WireShark installed on the mac (with pcap support) in order to make multicast more reliable with the up/down scripts.*
   4. Edit the `client.ovpn` file to have your server’s IP in it.
   5. Install [TunnelBlick](https://code.google.com/p/tunnelblick/) on your Mac. Rename the folder with all the files from above (on your client) to have a `.tblk` extension and double click on it. TunnelBlick will install the VPN.
   6. Finally, start the OpenVPN service on the server (you should also set it to start Automatically), and connect to it from the client. Don’t bother with the OpenVPN GUI stuff.
 
  *phewf* That was difficult, though you’re pretty badass for getting it done! Note alternatively you can use [ZeroTier](https://www.zerotier.com/) (make sure to enable IP addressing on their website w/ an IP range) and not do any of the above OpenVPN craziness. ;) Also alternatively to ZeroTier is [Hamachi](https://secure.logmein.com/products/hamachi/download.aspx).
 
-9. Create a new file, `C:\startup.bat` which contains `md Z:\SteamLibrary`. The idea is that when the computer boots fresh, it will ensure that the Z drive is initialized properly for Steam to use as a game storage drive. Add this script via `gpedit.msc` to your startup. See instructions [here](http://stackoverflow.com/a/617313). ![gpedit.msc](Assets/gpedit.png)
+9. Create a new file, `C:\startup.bat` which contains `md Z:\SteamLibrary`. The idea is that when the computer boots fresh, it will ensure that the Z drive is initialized properly for Steam to use as a game storage drive. Add this script via `gpedit.msc` to your startup. See instructions [here](http://stackoverflow.com/a/617313). ![gpedit.msc](Images/gpedit.png)
 
 10. <a name="setting-up-steam">[Install Steam](http://store.steampowered.com/about/)</a> and set the following settings:
   * Make it remember your username/password so it can auto-login every time
@@ -85,15 +85,15 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
   * I recommend you turn off Automatic Sign-in of Friends (since this server will always be logged in) in `Friends`, and turn off the promo dialog in `Interface` (at the bottom).
   * Enable hardware encoding at `In-Home Streaming > Advanced Host Options > Enable Hardware Encoding`
   
-     ![Server Steam Settings](Assets/server-steam-settings.png)
+     ![Server Steam Settings](Images/server-steam-settings.png)
 
  On your mac, make sure you have Steam installed, but change `In-Home Streaming > Enable Hardware Decoding`. Similar settings to above might also be applicable.
 
- ![Client Steam Settings](Assets/client-steam-settings.png)
+ ![Client Steam Settings](Images/client-steam-settings.png)
  
 11. Once all is set up, run the following to log out of the Remote Desktop session and not lock the screen (so games can start): `tscon %sessionname% /dest:console`. I suggest creating a shortcut on the desktop for this.
 
- ![Logout Shortcut](Assets/shortcut.png)
+ ![Logout Shortcut](Images/shortcut.png)
  
 ## <a name="gaming-time"></a>Gaming time!
 
@@ -101,34 +101,34 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 
 2. With TunnelBlick on your client, connect to the VPN and start Steam on your client. It should detect the remote machine.
 
- ![TunnelBlick connected](Assets/tunnelblick-connected.png)
+ ![TunnelBlick connected](Images/tunnelblick-connected.png)
  
- ![Steam in-home connected](Assets/inhomestreaming-connected.png)
+ ![Steam in-home connected](Images/inhomestreaming-connected.png)
 
 3. Select a game to install (make sure to install to the Z drive), and after installing and click the Stream button!
 
  *Server*
  
- ![Server Steam](Assets/installinggame.png)
+ ![Server Steam](Images/installinggame.png)
 
  *Client*
  
- ![Client Steam](Assets/gameready.png)
+ ![Client Steam](Images/gameready.png)
 
  *Client streaming Deus Ex: Human Revolution*
  
- ![Streaming Deus Ex](Assets/fullscreen.jpg)
+ ![Streaming Deus Ex](Images/fullscreen.jpg)
 
  *Closer view of stats*
  
- ![Closer view of stats](Assets/fullscreenstats.jpg)
+ ![Closer view of stats](Images/fullscreenstats.jpg)
 
 ## Further optimizations
 
 * Because these machines have a lot of RAM, i’d suggest setting the Pagefile to something small like 16MB. See how [here](http://blogs.technet.com/b/danstolts/archive/2013/01/07/how_2d00_to_2d00_change_2d00_the_2d00_size_2d00_of_2d00_virtual_2d00_memory_2d00_pagefile_2d00_sys_2d00_on_2d00_windows_2d00_8_2d00_or_2d00_windows_2d00_server_2d00_2012.aspx). The smaller your `C:\` drive, the faster the AMI creation will be.
 * Often times games will crash when trying to start. It’s usually because they’re missing certain libraries. Make sure to install [.NET 3.5](https://technet.microsoft.com/en-us/library/dn482071.aspx), [XInput/Xaudio libraries](http://www.win2012workstation.com/xinput-and-xaudio-dlls/), and the Media Foundation feature package (from Server Manager). Also force run Windows Update and apply everything (including Optional packages).
 * I wouldn’t suggest attempting to write scripts to backup your `Z:\` drive to `C:\` when shutting down your machine. The games download quite quickly on a fresh boot from Steam. The `C:\` drive and EBS is quite slow.
-* To make it easy to start/stop the gaming instance I’ve made [gaming-up.sh](http://lg.io/assets/gaming-up.sh) and [gaming-down.sh](http://lg.io/assets/gaming-down.sh). `gaming-down.sh` will terminate the instance after creating an AMI, and gaming-up.sh will restore this AMI. You’ll need `jq` installed. Thanks to [Matt Marino](https://twitter.com/Ephs05msm), [here](https://www.evernote.com/shard/s467/sh/94042f32-9b11-45f7-a95a-1a653fc5988b/d9a81d9cb608b78e) are instructions for running this on Windows)
+* To make it easy to start/stop the gaming instance I’ve made [gaming-up.sh](Assets/gaming-up.sh) and [gaming-down.sh](Assets/gaming-down.sh). `gaming-down.sh` will terminate the instance after creating an AMI, and gaming-up.sh will restore this AMI. You’ll need `jq` installed. Thanks to [Matt Marino](https://twitter.com/Ephs05msm), [here](https://www.evernote.com/shard/s467/sh/94042f32-9b11-45f7-a95a-1a653fc5988b/d9a81d9cb608b78e) are instructions for running this on Windows)
 * Some games don’t have Steam Cloud. I’d recommend installing [Dropbox](https://www.dropbox.com/) and syncing the My Documents directory with it. That way you won’t lose your save game files between terminations.
 
 ## Performance gauging
@@ -136,7 +136,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 There are two ways to see how your streaming performance is doing.
 
 1. The first is have the `Display performance information` option enabled in your client’s Steam In-Home Streaming settings. Then when in-game, press F6 (Fn+F6 on a Mac) and information will be displayed at the bottom of the screen.
-![Rendering Stats](Assets/renderingstats.jpg)
+![Rendering Stats](Images/renderingstats.jpg)
 
   * Make sure that the Encoder is always NVFBC. If it’s not this will significantly slow things down since the H.264 encoding of the video will be done on the CPU (slower than the hardware H.264 encoding on the GRID GPU). If you see any form of `x264` here, it’s using CPU encoding.
   * Same goes for making sure you’re not doing software decoding. VideoToolbox is good if that’s what you see.
@@ -210,11 +210,11 @@ There are two ways to see how your streaming performance is doing.
 
 Lets face it, following all of the stuff above is a long, tedious process. Though it’s actually quite interesting how everything works, I’m sure you just want to get on the latest GTA pronto. As such I’ve made an AMI with everything above, including the optimizations.
 
-1. On AWS, create a new EC2 instance. Use the instructions on the [first step](#step1), except select the `ec2gaming` Community AMI. Don’t worry about the Key Pair. ![EC2gaming instance](Assets/ec2gaming-ami.png)
+1. On AWS, create a new EC2 instance. Use the instructions on the [first step](#step1), except select the `ec2gaming` Community AMI. Don’t worry about the Key Pair. ![EC2gaming instance](Images/ec2gaming-ami.png)
 
 2. Follow [step 2](#step2) except the password for the instance is `rRmbgYum8g`. Once you log in using Microsoft Remote Desktop, you’ll be asked to change the Administrator password. Change it to something. If you’re on Windows, you’ll need to use a Mac or Linux or a mobile client to reset the password since there’s a bug in the Windows Remote Desktop client.
 
-3. Install [TunnelBlick](https://code.google.com/p/tunnelblick/) on your Mac. Download the VPN configuration from [here](http://lg.io/assets/ec2gaming-tblk.zip) and unzip it. In the `client.ovpn` file, change `YOUR_HOSTNAME_HERE` to your instance’s IP/hostname. Rename this folder to `ec2gaming.tblk` and double click on it to import. Connect to the VPN with username `Administrator` and the password you set in the previous step.
+3. Install [TunnelBlick](https://code.google.com/p/tunnelblick/) on your Mac. Download the VPN configuration from [here](Assets/ec2gaming-tblk.zip) and unzip it. In the `client.ovpn` file, change `YOUR_HOSTNAME_HERE` to your instance’s IP/hostname. Rename this folder to `ec2gaming.tblk` and double click on it to import. Connect to the VPN with username `Administrator` and the password you set in the previous step.
 
 4. Set up Steam [as above](#setting-up-steam), though it’s already installed. Just login with your account credentials and configure it accordingly.
 
