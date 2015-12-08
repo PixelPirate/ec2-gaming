@@ -34,9 +34,9 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 
 3. Before we go too crazy:
  * [Disable the IE Enhanced Security Configuration](Disable the IE Enhanced Security Configuration.md) (so you can use IE)
- * [Enable auto-login](http://superuser.com/a/661386)
- * [Disable the windows firewall](http://www.dell.com/support/article/us/en/19/SLN156432/EN)
- * [Enable showing filename extensions](https://support.software.dell.com/appassure/kb/118327)
+ * [Enable auto-login](Enable auto-login.md)
+ * [Disable the windows firewall](Disable the windows firewall.md)
+ * [Enable showing filename extensions](Enable showing filename extensions.md)
 
 4. Download and install version 347.88 of the [GeForce GTX TITAN X driver package](http://www.geforce.com/drivers/results/83080) for Windows 8.1. Only the GeForce package contains the latest drivers for the GRID cards. If you get an error when installing the drivers that says it couldn’t detect a GeForce card, you’re not in Remote Desktop as an `admin session`. Reboot when asked. Note that the latest version of the drivers sometimes cause Windows not to be able to restart. ![Geforce Titan for Windows 8.1 64-bit](Images/geforcetitan.png)
 
@@ -51,7 +51,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
  ```
  ![Only the NVIDIA GRID K520](Images/onlyonedevice.png)
  
-7. Start the Windows Audio Service as per the instructions [here](http://www.win2012workstation.com/enable-sound/). As we’re also on an EC2 machine, there is no soundcard, so install [Razer Surround](http://www.razerzone.com/surround) to get a virtual soundcard, AND you get fancy 5.1 simulation! Note that there’s no need to create/login to a Razer ID account.
+7. Start the Windows Audio Service as per the instructions [here](Start the Windows Audio Service.md). As we’re also on an EC2 machine, there is no soundcard, so install [Razer Surround](http://www.razerzone.com/surround) to get a virtual soundcard, AND you get fancy 5.1 simulation! Note that there’s no need to create/login to a Razer ID account.
 
 8. Download OpenVPN from [here](https://openvpn.net/index.php/open-source/downloads.html). Select the 64-bit Vista installer and when installing make sure to select to **select to install all components**. After installing, open a Command Prompt and run the following:
 
@@ -77,7 +77,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 
  *phewf* That was difficult, though you’re pretty badass for getting it done! Note alternatively you can use [ZeroTier](https://www.zerotier.com/) (make sure to enable IP addressing on their website w/ an IP range) and not do any of the above OpenVPN craziness. ;) Also alternatively to ZeroTier is [Hamachi](https://secure.logmein.com/products/hamachi/download.aspx).
 
-9. Create a new file, `C:\startup.bat` which contains `md Z:\SteamLibrary`. The idea is that when the computer boots fresh, it will ensure that the Z drive is initialized properly for Steam to use as a game storage drive. Add this script via `gpedit.msc` to your startup. See instructions [here](http://stackoverflow.com/a/617313). ![gpedit.msc](Images/gpedit.png)
+9. Create a new file, `C:\startup.bat` which contains `md Z:\SteamLibrary`. The idea is that when the computer boots fresh, it will ensure that the Z drive is initialized properly for Steam to use as a game storage drive. Add this script via `gpedit.msc` to your startup. See instructions [here](Initialize Z drive properly on boot.md). ![gpedit.msc](Images/gpedit.png)
 
 10. <a name="setting-up-steam">[Install Steam](http://store.steampowered.com/about/)</a> and set the following settings:
   * Make it remember your username/password so it can auto-login every time
@@ -125,10 +125,10 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 
 ## Further optimizations
 
-* Because these machines have a lot of RAM, i’d suggest setting the Pagefile to something small like 16MB. See how [here](http://blogs.technet.com/b/danstolts/archive/2013/01/07/how_2d00_to_2d00_change_2d00_the_2d00_size_2d00_of_2d00_virtual_2d00_memory_2d00_pagefile_2d00_sys_2d00_on_2d00_windows_2d00_8_2d00_or_2d00_windows_2d00_server_2d00_2012.aspx). The smaller your `C:\` drive, the faster the AMI creation will be.
-* Often times games will crash when trying to start. It’s usually because they’re missing certain libraries. Make sure to install [.NET 3.5](https://technet.microsoft.com/en-us/library/dn482071.aspx), [XInput/Xaudio libraries](http://www.win2012workstation.com/xinput-and-xaudio-dlls/), and the Media Foundation feature package (from Server Manager). Also force run Windows Update and apply everything (including Optional packages).
+* Because these machines have a lot of RAM, i’d suggest setting the Pagefile to something small like 16MB. See how [here](Setting the Pagefile size.md). The smaller your `C:\` drive, the faster the AMI creation will be.
+* Often times games will crash when trying to start. It’s usually because they’re missing certain libraries. Make sure to install [.NET 3.5](Install .NET 3.md), [XInput/Xaudio libraries](Install XInput-Xaudio libraries.md), and the Media Foundation feature package (from Server Manager). Also force run Windows Update and apply everything (including Optional packages).
 * I wouldn’t suggest attempting to write scripts to backup your `Z:\` drive to `C:\` when shutting down your machine. The games download quite quickly on a fresh boot from Steam. The `C:\` drive and EBS is quite slow.
-* To make it easy to start/stop the gaming instance I’ve made [gaming-up.sh](Assets/gaming-up.sh) and [gaming-down.sh](Assets/gaming-down.sh). `gaming-down.sh` will terminate the instance after creating an AMI, and gaming-up.sh will restore this AMI. You’ll need `jq` installed. Thanks to [Matt Marino](https://twitter.com/Ephs05msm), [here](https://www.evernote.com/shard/s467/sh/94042f32-9b11-45f7-a95a-1a653fc5988b/d9a81d9cb608b78e) are instructions for running this on Windows)
+* To make it easy to start/stop the gaming instance I’ve made [gaming-up.sh](Assets/gaming-up.sh) and [gaming-down.sh](Assets/gaming-down.sh). `gaming-down.sh` will terminate the instance after creating an AMI, and gaming-up.sh will restore this AMI. You’ll need `jq` installed. Thanks to [Matt Marino](https://twitter.com/Ephs05msm), [here](Running gaming-up.sh and gaming-down.md) are instructions for running this on Windows)
 * Some games don’t have Steam Cloud. I’d recommend installing [Dropbox](https://www.dropbox.com/) and syncing the My Documents directory with it. That way you won’t lose your save game files between terminations.
 
 ## Performance gauging
