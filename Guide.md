@@ -33,7 +33,7 @@ Finally, for the Key Pair, create a new one since you’ll need one for Windows 
 2. <a name="step2"></a>Once your machine has spun up, [get the Windows password](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/IIS4.1GettingPassword.html) using your private key. Connect via [Microsoft Remote Desktop](https://itunes.apple.com/en/app/microsoft-remote-desktop/id715768417?mt=12) and add the details in there. Also make sure to select `Connect to admin session` to avoid GPU detection troubles. Note that your first connection might have a black screen for about a minute as it creates your user profile.
 
 3. Before we go too crazy:
- * [Disable the IE Enhanced Security Configuration](http://www.win2012workstation.com/ie-enhanced-security-configuration/) (so you can use IE)
+ * [Disable the IE Enhanced Security Configuration](Disable the IE Enhanced Security Configuration.md) (so you can use IE)
  * [Enable auto-login](http://superuser.com/a/661386)
  * [Disable the windows firewall](http://www.dell.com/support/article/us/en/19/SLN156432/EN)
  * [Enable showing filename extensions](https://support.software.dell.com/appassure/kb/118327)
